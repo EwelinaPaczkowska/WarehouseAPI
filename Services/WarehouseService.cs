@@ -2,19 +2,20 @@
 using Microsoft.Data.SqlClient;
 using WarehouseAPI.DTOs;
 using WarehouseAPI.Exceptions;
+using WarehouseAPI.Procedures;
 using WarehouseAPI.Repositories;
 
 namespace WarehouseAPI.Services;
 
-[ApiController]
-[Route("api/[controller]")]
 public class WarehouseService: IWarehouseService
 {
     private readonly IWarehouseRepository _wareHouseRepository;
+    private readonly ProcedureExecutor _executor;
 
-    public WarehouseService(IWarehouseRepository wareHouseRepository)
+    public WarehouseService(IWarehouseRepository wareHouseRepository, ProcedureExecutor executor)
     {
         _wareHouseRepository = wareHouseRepository;
+        _executor = executor;
     }
 
     public async Task<int> AddProductAsync(ProductWarehouseDTO product, CancellationToken cancellationToken)
@@ -43,5 +44,10 @@ public class WarehouseService: IWarehouseService
         };
         var response = await _wareHouseRepository.AddProductAsync(argument, cancellationToken);
         return response;
+    }
+
+    public async Task<int> AddProductUsingStoredProcedureAsync(ProductWarehouseDTO dto)
+    {
+        return await _executor.Execute(dto);    
     }
 }

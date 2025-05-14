@@ -6,6 +6,6 @@ namespace WarehouseAPI.Services
 {
     public interface IWarehouseService
     {
-        Task<int> AddProductAsync(ProductWarehouseDTO product, CancellationToken cancellationToken);
+        Task<int> AddProductUsingStoredProcedureAsync(ProductWarehouseDTO dto);
     }
 }
